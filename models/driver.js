@@ -5,12 +5,12 @@ const Schema = mongoose.Schema;
 const DriverSchema = new Schema({
   email: {
     type: String,
-    text: 1,
-    required: 1
+    text: true,
+    required: true
   },
   driving: {
     type: Boolean,
-    default: 0
+    default: false
   }
 });
 

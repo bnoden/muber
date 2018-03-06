@@ -1,8 +1,9 @@
 const DriversController = require('../controllers/drivers_controller');
 
 module.exports = app => {
-  // Watch for incoming request of GET to route localhost:3050/api
+  // Watch for incoming request of GET to route localhost:<PORT>/api
   app.get('/api', DriversController.greeting);
-
   app.post('/api/drivers', DriversController.create);
+  app.put('/api/drivers/:id', DriversController.edit);
+  app.delete('/api/drivers/:id', DriversController.delete);
 };

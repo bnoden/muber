@@ -6,19 +6,34 @@ const app = require('../../app');
 const Driver = mongoose.model('driver');
 
 describe('Drivers controller', () => {
-  it('Post to /api/drivers creates a new driver', done => {
+  it('POST to /api/drivers creates a new driver', done => {
+    const postEmail = 'post@test.com';
     Driver.count().then(count => {
+      request(app).post('/api/drivers').send({ email: postEmail }).end(() => {
+        Driver.count().then(newCount => {
+          // console.log('count:', count);
+          // console.log('newCount:', newCount);
+          assert(count + 1 === newCount);
+        });
+      });
+    });
+    done();
+  });
+
+  it('PUT to /api/drivers/id edits an existing driver', done => {
+    const putEmail = 'put@test.com';
+    const driver = new Driver({ email: putEmail, driving: false });
+
+    driver.save().then(() => {
       request(app)
-        .post('/api/drivers')
-        .send({ email: 'test@test.com' })
+        .put(`/api/drivers/${driver._id}`)
+        .send({ driving: true })
         .end(() => {
-          Driver.count().then(newCount => {
-            // console.log('count:', count);
-            // console.log('newCount:', newCount);
-            assert(count + 1 === newCount);
+          Driver.findOne({ email: putEmail }).then(driver => {
+            assert(driver.driving === true);
+            done();
           });
         });
     });
-    done();
   });
 });
