@@ -13,6 +13,8 @@ describe('Drivers controller', () => {
         .send({ email: 'test@test.com' })
         .end(() => {
           Driver.count().then(newCount => {
+            // console.log('count:', count);
+            // console.log('newCount:', newCount);
             assert(count + 1 === newCount);
           });
         });

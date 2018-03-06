@@ -6,8 +6,11 @@ const routes = require('./routes/routes');
 
 const app = express();
 
-mongoose.Promise = Promise;
-mongoose.connect('mongodb://localhost/muber');
+mongoose.Promise = global.Promise;
+if (process.env.NODE_ENV !== 'test') {
+  mongoose.connect('mongodb://localhost/muber');
+}
+
 // app.use() must be called before routes()
 app.use(bodyParser.json());
 routes(app);
