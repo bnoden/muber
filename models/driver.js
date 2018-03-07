@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const LocationSchema = require('./location');
+
 const Schema = mongoose.Schema;
 
 const DriverSchema = new Schema({
@@ -11,7 +13,8 @@ const DriverSchema = new Schema({
   driving: {
     type: Boolean,
     default: false
-  }
+  },
+  geometry: LocationSchema
 });
 
 const Driver = mongoose.model('driver', DriverSchema);

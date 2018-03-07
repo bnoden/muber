@@ -3,6 +3,7 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 
 const app = require('../../app');
+
 const Driver = mongoose.model('driver');
 
 describe('Drivers controller', () => {
@@ -48,6 +49,36 @@ describe('Drivers controller', () => {
           done();
         });
       });
+    });
+  });
+
+  it('GET to /api/drivers finds drivers in a location', done => {
+    const dallas = new Driver({
+      email: 'dallas@test.com',
+      geometry: {
+        type: 'Location',
+        coordinates: [96.797, 32.7767]
+      }
+    });
+    const atlanta = new Driver({
+      email: 'atlanta@test.com',
+      geometry: {
+        type: 'Location',
+        coordinates: [84.388, 33.749]
+      }
+    });
+
+    const dal = [...dallas.geometry.coordinates];
+    const atl = [...atlanta.geometry.coordinates];
+
+    Promise.all([dallas.save(), atlanta.save()]).then(() => {
+      request(app)
+        .get(`/api/drivers?lng=${dal[0]}&lat=${dal[1]}`)
+        .end((err, response) => {
+          assert(response.body.length === 1);
+          assert(response.body[0].obj.email === dallas.email);
+          done();
+        });
     });
   });
 });
